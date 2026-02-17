@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<style>
+body {
+background-color: darkgreen;
+}
+
+button {
+padding: 50px;
+background-color: lightgreen;
+}
+
+</style>
+<body>
+
+<button onclick="talleta()">talleta</button>
+<button onclick="nosta()">nosta</button>
+<button onclick="tiedot()">näytä tiedot</button>
+<button onclick="historia()">näytä historia</button>
+<button onclick="korko()">kerro korko</button>
+<button onclick="luotto()">anna luottoa</button>
+<button onclick="salhi()">näytä suurin saldo</button>
+<button onclick="suur()">näytä suurimmat talletukset ja nostot</button>
+<button onclick="save()">tallenna tiedot</button>
+
+<h2 id="demo"></h2>
+
+<script>
+
+let pankki = {
+numero: prompt("aseta itsellesi tilinumero"),
+saldo: 0,
+salhi: [],
+talhi: [],
+noshi: [],
+luotto: [],
+korkopro: 0.025,
+korkorah: 0,
+historia: []
+}
+
+if (isNaN(pankki.numero) || pankki.numero < 10000 || pankki.numero > 10000000000) {
+alert("meidän sääntöjen mukaisesti pankkinumero on 10000 ja 10000000000 lukujen välissä oleva numero joten laita sopiva numero")
+alert("sivussa epätavallista toimintaa havaittu! sivu päivittyy");
+alert (3);
+alert (2);
+alert (1);
+alert ("näkemiin!");
+window.location.reload();
+}
+
+function talleta() {
+let päivä = new Date();
+let y = päivä.getFullYear();
+let kk = päivä.getMonth();
+let pvm = päivä.getDay();
+let talletus = Number(prompt("paljonko rahaa aiot tallettaa?"));
+pankki.saldo = pankki.saldo + talletus;
+pankki.historia.push(pvm + "." + kk + "." + y + " talletus tehty määrällä: " + talletus);
+
+pankki.talhi.push(talletus);
+pankki.salhi.push(pankki.saldo);
+}
+
+function nosta() {
+let päivä = new Date();
+let y = päivä.getFullYear();
+let kk = päivä.getMonth();
+let pvm = päivä.getDay();
+let nostos = Number(prompt("paljonko rahaa haluat nostaa?"));
+if (pankki.saldo >= nostos) {
+pankki.saldo = pankki.saldo - nostos;
+alert("nostos onnistui")
+pankki.historia.push(pvm + "." + kk + "." + y + " nosto tehty määrällä: " + nostos);
+
+pankki.noshi.push(nostos);
+pankki.salhi.push(pankki.saldo);
+}
+else {
+alert("tilisi saldo valitettavasti on liian pieni  nostolle, joko ehdota pienempi nostos tai talleta rahaa tilillesi")
+pankki.historia.push(pvm + "." + kk + "." + y + " viallinen nosto yritetty määrällä: " + nostos);
+let velka =(nostos - pankki.saldo)
+alert("sinulla saisi olla " + velka + " verran rahaa, jotta voisit nostaa kyseisen verran")
+
+}
+}
+
+function tiedot() {
+alert("tilinumero on:" + pankki.numero);
+alert("tilin saldo on:" + pankki.saldo);
+alert("korkoilla ollaan tienattu: " + pankki.korkorah + " määrän rahaa yhteensä");
+alert("korkoprosentti on 2.5%");
+alert("luottoja on annettu prosentteina: " + pankki.luotto);
+alert("historia näyttää tältä:" + pankki.historia);
+alert("saldon määrä muuttui seuraavasti: " + pankki.salhi);
+alert("talletuksia oli tällaisia lukuja " + pankki.talhi);
+alert("nostoja oli tällaisia lukuja " + pankki.noshi);
+}
+
+function historia() {
+document.getElementById("demo").innerHTML = "historia näyttäisi tältä:" + pankki.historia;
+}
+
+function luotto() {
+let päivä = new Date();
+let y = päivä.getFullYear();
+let kk = päivä.getMonth();
+let pvm = päivä.getDay();
+
+let luo = Number(prompt("kuinka ison luoton haluaisit? maksimi prosentti on 25%"))
+if (25 >= luo) {
+alert("luotto hyväksytty");
+pankki.luotto.push(luo);
+pankki.historia.push(pvm + "." + kk + "." + y + " uusi luotto tehty määrällä: " + luo);
+}
+else {
+alert("vastauksesi ei ole yhteensopiva")
+pankki.historia.push(pvm + "." + kk + "." + y + " viallinen uusi luotto yritetty määrällä: " + luo);
+}
+}
+
+function korko() {
+let päivä = new Date();
+let y = päivä.getFullYear();
+let kk = päivä.getMonth();
+let pvm = päivä.getDay();
+
+let kys = Number(prompt("kuinka paljon rahaa asiakkaalla oli lainassa?"));
+pankki.korkorah = pankki.korkorah + kys * pankki.korkopro;
+
+pankki.historia.push(pvm + "." + kk + "." + y + " korkoa saatu määrällä: " + kys);
+}
+
+function suur() {
+let talsuur = pankki.talhi.reduce((max, current) => current > max ? current : max, pankki.talhi[0]);
+let nosuur = pankki.noshi.reduce((max, current) => current > max ? current : max, pankki.noshi[0]);
+alert("suurin talletus oli: " + talsuur);
+alert("suurin nostos oli: " + nosuur);
+alert("käy katsomassa historiasta että mikä päivämäärä oli jos se tieto on tarpeellista")
+}
+
+function salhi() {
+let salsuur= pankki.salhi.reduce((max, current) => current > max ? current : max, pankki.salhi[0]);
+alert(salsuur + " on suurin saldo tältä tililtä");
+}
+
+function save() {
+let tieto = ("tallennettu saldo on: " + pankki.saldo + " tallennettu tilinumero on: " + pankki.numero + " tallennettu historia on: " + pankki.historia + " tallennetun saldon historia on: " + pankki.salhi + " tallennetut tallenteet ovat: " + pankki.talhi + " tallennetut nostot ovat: " + pankki.noshi + " tallennetut luotot ovat: " + pankki.luotto + " tallennetut rahat saatu koroista ovat: " + pankki.korkorah);
+
+let blob = new Blob([tieto], { type: "text/plain" });
+
+let link = document.createElement("a");
+link.href = URL.createObjectURL(blob);
+link.download = "tallennetut tiedot.txt";
+link.click();
+}
+
+
+
+</script>
+</body>
+</html>
