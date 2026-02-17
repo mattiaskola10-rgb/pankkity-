@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<style>
+body {
+background-color: darkgreen;
+}
+
+button {
+padding: 50px;
+background-color: lightgreen;
+}
+
+</style>
+<body>
+
+<button onclick="talleta()">talleta</button>
+<button onclick="nosta()">nosta</button>
+<button onclick="tiedot()">näytä tiedot</button>
+<button onclick="historia()">näytä historia</button>
+<button onclick="korko()">kerro korko</button>
+<button onclick="luotto()">anna luottoa</button>
+<p id="demo"></p>
+
+<script>
+
+let pankki = {
+numero: prompt("aseta itsellesi tilinumero"),
+saldo: 0,
+luotto: [],
+korkopro: 0.025,
+korkorah: 0,
+historia: []
+}
+
+if (isNaN(pankki.numero) || pankki.numero < 10000 || pankki.numero > 10000000000) {
+alert("meidän sääntöjen mukaisesti pankkinumero on 10000 ja 10000000000 lukujen välissä oleva numero joten laita sopiva numero")
+alert("sivussa epätavallista toimintaa havaittu! sivu päivittyy");
+alert (3);
+alert (2);
+alert (1);
+alert ("näkemiin!");
+window.location.reload();
+}
+
+function talleta() {
+let päivä = new Date();
+let y = päivä.getFullYear();
+let kk = päivä.getMonth();
+let pvm = päivä.getDay();
+let talletus = Number(prompt("paljonko rahaa aiot tallettaa?"));
+pankki.saldo = pankki.saldo + talletus;
+pankki.historia.push(pvm + "." + kk + "." + y + " talletus tehty määrällä: " + talletus);
+}
+
+function nosta() {
+let päivä = new Date();
+let y = päivä.getFullYear();
+let kk = päivä.getMonth();
+let pvm = päivä.getDay();
+let nostos = Number(prompt("paljonko rahaa haluat nostaa?"));
+if (pankki.saldo >= nostos) {
+pankki.saldo = pankki.saldo - nostos;
+alert("nostos onnistui")
+pankki.historia.push(pvm + "." + kk + "." + y + " nosto tehty määrällä: " + nostos);
+}
+else {
+alert("tilisi saldo valitettavasti on liian pieni  nostolle, joko ehdota pienempi nostos tai talleta rahaa tilillesi")
+pankki.historia.push(pvm + "." + kk + "." + y + " viallinen nosto yritetty määrällä: " + nostos);
+let velka =(nostos - pankki.saldo)
+alert("sinulla saisi olla " + velka + " verran rahaa, jotta voisit nostaa kyseisen verran")
+
+}
+}
+
+function tiedot() {
+alert("tilinumero on:" + pankki.numero);
+alert("tilin saldo on:" + pankki.saldo);
+alert("korkoilla ollaan saatu: " + pankki.korkorah + " määrän rahaa yhteensä");
+alert("korkoprosentti on 2.5%");
+alert("luottoja on annettu prosentteina: " + pankki.luotto);
+alert("historia näyttää tältä:" + pankki.historia);
+}
+
+function historia() {
+document.getElementById("demo").innerHTML = "historia näyttäisi tältä:" + pankki.historia;
+}
+
+function luotto() {
+let päivä = new Date();
+let y = päivä.getFullYear();
+let kk = päivä.getMonth();
+let pvm = päivä.getDay();
+
+let luo = Number(prompt("kuinka ison luoton haluaisit? maksimi prosentti on 25%"))
+if (25 >= luo) {
+alert("luotto hyväksytty");
+pankki.luotto.push(luo);
+pankki.historia.push(pvm + "." + kk + "." + y + " uusi luotto tehty määrällä: " + luo);
+}
+else {
+alert("vastauksesi ei ole yhteensopiva")
+pankki.historia.push(pvm + "." + kk + "." + y + " viallinen uusi luotto yritetty määrällä: " + luo);
+}
+}
+
+function korko() {
+let päivä = new Date();
+let y = päivä.getFullYear();
+let kk = päivä.getMonth();
+let pvm = päivä.getDay();
+
+let kys = Number(prompt("kuinka paljon rahaa asiakkaalla oli lainassa?"));
+pankki.korkorah = pankki.korkorah + kys * pankki.korkopro;
+
+pankki.historia.push(pvm + "." + kk + "." + y + " korkoa saatu määrällä: " + kys);
+}
+
+
+</script>
+</body>
+</html>
